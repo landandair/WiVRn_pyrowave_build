@@ -68,6 +68,8 @@ const char * encoder(video_codec codec)
 			return "hevc_vaapi";
 		case video_codec::av1:
 			return "av1_vaapi";
+		case video_codec::pyrowave:
+			throw std::runtime_error("pyrowave is only supported by the specific encoder");
 		case video_codec::raw:
 			break;
 	}
@@ -259,6 +261,8 @@ video_encoder_va::video_encoder_va(wivrn::vk_bundle & vk,
 		case video_codec::av1:
 			encoder_ctx->profile = AV_PROFILE_AV1_MAIN;
 			break;
+		case video_codec::pyrowave:
+			throw std::runtime_error("pyrowave is only supported by the specific encoder");
 		case video_codec::raw:
 			throw std::runtime_error("raw codec not supported");
 	}

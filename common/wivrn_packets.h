@@ -219,6 +219,7 @@ enum video_codec
 	h265,
 	hevc = h265,
 	av1,
+	pyrowave,
 	raw,
 };
 

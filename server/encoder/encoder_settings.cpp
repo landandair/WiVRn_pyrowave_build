@@ -62,6 +62,9 @@ static void split_bitrate(std::array<wivrn::encoder_settings, 3> & encoders, uin
 			case wivrn::av1:
 			case wivrn::raw:
 				break;
+			case wivrn::pyrowave:
+				w *= 50;
+				break;
 		}
 		encoder.bitrate = w;
 		total_weight += w;

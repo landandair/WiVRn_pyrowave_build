@@ -42,6 +42,7 @@
 #include "video_encoder_vulkan_h264.h"
 #include "video_encoder_vulkan_h265.h"
 #endif
+#include "video_encoder_pyrowave.h"
 #include "video_encoder_raw.h"
 
 namespace wivrn
@@ -121,6 +122,8 @@ std::unique_ptr<video_encoder> video_encoder::create(
 				break;
 			case video_codec::av1:
 				throw std::runtime_error("av1 not supported for vulkan video encode");
+			case video_codec::pyrowave:
+				throw std::runtime_error("pyrowave is only supported by the specific encoder");
 			case video_codec::raw:
 				throw std::runtime_error("raw codec only supported on raw encoder");
 		}
@@ -152,6 +155,11 @@ std::unique_ptr<video_encoder> video_encoder::create(
 		throw std::runtime_error("vaapi support not enabled");
 #endif
 	}
+	if (settings.encoder_name == encoder_pyrowave)
+	{
+		res = std::make_unique<video_encoder_pyrowave>(wivrn_vk, settings, fps, stream_idx);
+	}
+
 
 	if (settings.encoder_name == encoder_raw)
 	{
@@ -176,6 +184,9 @@ std::unique_ptr<video_encoder> video_encoder::create(
 				break;
 			case av1:
 				file += ".av1";
+				break;
+			case pyrowave:
+				file += ".pyro";
 				break;
 			case raw:
 				file += ".yuv";

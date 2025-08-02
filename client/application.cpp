@@ -893,6 +893,10 @@ void application::initialize_vulkan()
 	}
 
 	vk_device_extensions.push_back(VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME);
+	vk_device_extensions.push_back(VK_KHR_8BIT_STORAGE_EXTENSION_NAME);
+	vk_device_extensions.push_back(VK_KHR_16BIT_STORAGE_EXTENSION_NAME);
+	vk_device_extensions.push_back(VK_EXT_SUBGROUP_SIZE_CONTROL_EXTENSION_NAME);
+	vk_device_extensions.push_back(VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME);
 	vk_device_extensions.push_back(VK_KHR_SAMPLER_YCBCR_CONVERSION_EXTENSION_NAME);
 	vk_device_extensions.push_back(VK_KHR_MULTIVIEW_EXTENSION_NAME);
 	optional_device_extensions.emplace(VK_EXT_INDEX_TYPE_UINT8_EXTENSION_NAME);
@@ -1047,6 +1051,7 @@ void application::initialize_vulkan()
 	                .ppEnabledExtensionNames = vk_device_extensions.data(),
 	                .pEnabledFeatures = &device_features,
 	        },
+	        vk::PhysicalDeviceFragmentShadingRateFeaturesKHR{},
 	        vk::PhysicalDeviceSamplerYcbcrConversionFeaturesKHR{
 	                .samplerYcbcrConversion = true,
 	        },
@@ -1054,6 +1059,20 @@ void application::initialize_vulkan()
 	        vk::PhysicalDeviceMultiviewFeaturesKHR{
 	                .multiview = true,
 	        },
+	        vk::PhysicalDevice8BitStorageFeatures{
+	                .storageBuffer8BitAccess = true,
+	        },
+	        vk::PhysicalDevice16BitStorageFeatures{
+	                .storageBuffer16BitAccess = true,
+	        },
+	        vk::PhysicalDeviceSubgroupSizeControlFeaturesEXT{
+	                .subgroupSizeControl = true,
+	                .computeFullSubgroups = true,
+	        },
+	        vk::PhysicalDeviceFloat16Int8FeaturesKHR{
+	                .shaderFloat16 = true,
+	        },
+	};
 	        vk::PhysicalDeviceIndexTypeUint8FeaturesEXT{}};
 
 	auto check_feature_flag = [&](auto feature_flag, const char * extension_name) -> bool {

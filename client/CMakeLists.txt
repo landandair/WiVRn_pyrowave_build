@@ -78,7 +78,7 @@ if(ANDROID)
     file(GLOB PLATFORM_SOURCE CONFIGURE_DEPENDS
         "android/*.cpp"
         "audio/android/*.cpp"
-        "decoder/android/*.cpp"
+        #"decoder/android/*.cpp"
         )
     target_sources(wivrn PRIVATE ${PLATFORM_SOURCE})
 
@@ -131,7 +131,7 @@ else()
         target_link_libraries(wivrn PkgConfig::libpipewire)
     endif()
 
-    target_sources(wivrn PRIVATE ${PLATFORM_SOURCE})
+    #target_sources(wivrn PRIVATE ${PLATFORM_SOURCE})
 
     file(CREATE_LINK ${CMAKE_CURRENT_BINARY_DIR}/share ${CMAKE_BINARY_DIR}/share SYMBOLIC)
 endif()
@@ -146,6 +146,7 @@ target_compile_definitions(wivrn PRIVATE "XR_USE_TIMESPEC=1")
 file(GLOB LOCAL_SOURCE CONFIGURE_DEPENDS
     "*.cpp"
     "decoder/*.cpp"
+    "decoder/pyrowave/*.cpp"
     "scenes/*.cpp"
     "utils/*.cpp"
     "vk/*.cpp"
@@ -174,6 +175,7 @@ target_link_libraries(wivrn
     Vulkan::Vulkan
     wivrn-common
     wivrn-external
+    pyrowave
 )
 
 target_compile_definitions(wivrn PRIVATE -DXR_USE_GRAPHICS_API_VULKAN)
