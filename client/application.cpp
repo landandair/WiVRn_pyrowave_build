@@ -1041,6 +1041,7 @@ void application::initialize_vulkan()
 	};
 
 	vk::PhysicalDeviceFeatures device_features{
+	        .shaderStorageImageWriteWithoutFormat = true,
 	        .shaderClipDistance = true,
 	};
 
