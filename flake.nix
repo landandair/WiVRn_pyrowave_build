@@ -27,6 +27,9 @@
         extraNativeBuildInputs = [
           pkgs.util-linux
         ];
+        extraNativeBuildInputs = [
+          pkgs.util-linux
+        ];
 
         package = pkgs.enableDebugging (pkgs.wivrn.overrideAttrs (finalAttrs: oldAttrs: {
           # Filter the directories and files we don't need to keep to avoid needless rebuilds
