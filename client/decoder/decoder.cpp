@@ -18,6 +18,7 @@
 
 #include "decoder.h"
 
+#include "decoder/pyrowave/decoder.h"
 #ifdef __ANDROID__
 #include "decoder/android/android_decoder.h"
 #elif WIVRN_USE_V4L2
@@ -38,20 +39,30 @@ std::shared_ptr<wivrn::decoder> wivrn::decoder::make(
         std::weak_ptr<scenes::stream> scene,
         shard_accumulator * acc)
 {
+	if (description.codec == pyrowave)
+		return std::make_shared<wivrn::pyrowave_decoder>(
+		        device,
+		        phys_dev,
+		        vk_queue_family_index,
+		        description,
+		        fps,
+		        stream_index,
+		        scene,
+		        acc);
 	switch (description.codec[stream_index])
 	{
 		case h264:
 		case h265:
 		case av1:
 #ifdef __ANDROID__
-			return std::make_shared<wivrn::android::decoder>(
-			        device,
-			        phys_dev,
-			        description,
-			        stream_index,
-			        scene,
-			        acc);
-#elif WIVRN_USE_V4L2
+	return std::make_shared<wivrn::android::decoder>(
+	        device,
+	        phys_dev,
+	        description,
+	        fps,
+	        stream_index,
+	        scene,
+	        acc);#elif WIVRN_USE_V4L2
 			return std::make_shared<wivrn::v4l2::decoder>(
 			        device, phys_dev, vk_queue_family_index, description, stream_index, scene, acc);
 #else
@@ -90,6 +101,7 @@ static std::vector<wivrn::video_codec_capability> supported_codecs_()
 	return res;
 }
 
+std::vector<wivrn::video_codec> wivrn::decoder::supported_codecs()
 const std::vector<wivrn::video_codec_capability> & wivrn::decoder::supported_codecs()
 {
 	static std::vector<wivrn::video_codec_capability> res = supported_codecs_();
@@ -98,6 +110,7 @@ const std::vector<wivrn::video_codec_capability> & wivrn::decoder::supported_cod
 
 bool wivrn::decoder::supports_10bit(wivrn::video_codec codec)
 {
+	std::vector<wivrn::video_codec> res;
 #ifdef __ANDROID__
 	return codec == wivrn::video_codec::h265 or codec == wivrn::video_codec::av1;
 #elif WIVRN_USE_V4L2
@@ -120,4 +133,6 @@ bool wivrn::decoder::supports_10bit(wivrn::video_codec codec)
 	// ffmpeg
 	return codec == wivrn::video_codec::h265 or codec == wivrn::video_codec::av1;
 #endif
+	// Don't probe for pyrowave for now
+	return res;
 }

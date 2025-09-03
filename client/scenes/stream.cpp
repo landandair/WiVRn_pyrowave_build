@@ -1146,8 +1146,9 @@ void scenes::stream::render(const XrFrameState & frame_state)
 			if (b and b->semaphore)
 			{
 				assert(b->semaphore_val);
-				semaphores.push_back(b->semaphore);
-				semaphore_vals.push_back(*b->semaphore_val);
+				assert(b->semaphore_val);
+			semaphores.push_back(b->semaphore);
+			semaphore_vals.push_back(*b->semaphore_val);
 				wait_stages.push_back(vk::PipelineStageFlagBits::eFragmentShader);
 			}
 		}

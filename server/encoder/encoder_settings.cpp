@@ -271,6 +271,18 @@ public:
 		}
 #endif
 		U_LOG_W("No suitable hardware accelerated codec found");
+		}
+	}
+
+	if (config.name == encoder_pyrowave)
+		config.codec = pyrowave;
+
+#if WIVRN_USE_VAAPI
+	if (config.name == encoder_vaapi and not config.codec)
+	{
+		config.codec = filter_codecs_vaapi(bundle, headset_codecs, bit_depth);
+		if (not config.codec)
+		{
 #if WIVRN_USE_X264
 		if (config.name.empty() or config.name == encoder_x264)
 			return {encoder_x264, video_codec::h264};
@@ -280,6 +292,15 @@ public:
 	}
 };
 } // namespace
+
+static void check_offsets(const configuration::encoder & c)
+{
+	if (c.name == encoder_pyrowave)
+	{
+		if (c.offset_x != 0 or c.offset_y != 0 or c.width != 1 or c.height != 1)
+			U_LOG_E("Pyrowave does not support multi-encoder layout");
+	}
+}
 
 static uint16_t align(uint16_t value, uint16_t alignment)
 {
@@ -337,6 +358,7 @@ std::array<encoder_settings, 3> get_encoder_settings(wivrn::vk_bundle & bundle, 
 	else if (not bit_depth)
 	{
 		bit_depth = all_encoders_10bit ? 10 : 8;
+		check_offsets(encoder);
 	}
 
 	auto check_format = [&](vk::Format format) {

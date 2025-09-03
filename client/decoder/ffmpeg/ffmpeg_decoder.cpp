@@ -56,6 +56,8 @@ static AVCodecID codec_id(wivrn::video_codec codec)
 			return AV_CODEC_ID_HEVC;
 		case c::av1:
 			return AV_CODEC_ID_AV1;
+		case c::pyrowave:
+			assert(false);
 		case c::raw:
 			break;
 	}
@@ -106,6 +108,7 @@ decoder::decoder(
         uint8_t stream_index,
         std::weak_ptr<scenes::stream> scene,
         shard_accumulator * accumulator) :
+        wivrn::decoder(description),
         device(device),
         codec(nullptr, free_codec_context),
         sws(nullptr, sws_freeContext),

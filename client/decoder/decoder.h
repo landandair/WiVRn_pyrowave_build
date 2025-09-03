@@ -55,6 +55,12 @@ public:
 #endif
 	};
 
+	const wivrn::to_headset::video_stream_description::item description;
+
+protected:
+	decoder(const wivrn::to_headset::video_stream_description::item & description) :
+	        description(description) {}
+
 public:
 	static std::shared_ptr<decoder> make(
 	        vk::raii::Device &,

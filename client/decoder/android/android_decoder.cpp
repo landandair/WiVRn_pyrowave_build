@@ -60,6 +60,8 @@ const char * mime(wivrn::video_codec codec)
 			return "video/hevc";
 		case c::av1:
 			return "video/av01";
+		case c::pyrowave:
+			assert(false);
 		case c::raw:
 			break;
 	}
@@ -109,6 +111,7 @@ decoder::decoder(
         uint8_t stream_index,
         std::weak_ptr<scenes::stream> weak_scene,
         shard_accumulator * accumulator) :
+        wivrn::decoder(description), stream_index(stream_index), fps(fps), device(device), weak_scene(weak_scene), accumulator(accumulator)
         stream_index(stream_index), device(device), weak_scene(weak_scene), accumulator(accumulator)
 {
 	spdlog::info("hbm_mutex.native_handle() = {}", (void *)hbm_mutex.native_handle());
